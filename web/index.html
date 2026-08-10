@@ -1,18 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <title>NeoLife</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeoLife — Vie intelligente</title>
+
+  <!-- 🔹 Framework CSS moderne (Bootstrap) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+    }
+    header {
+      background-color: #0d6efd;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    section {
+      margin: 2rem auto;
+      max-width: 800px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+    }
+    button {
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-  <h1>Bienvenue sur NeoLife</h1>
-  <button onclick="getDepenses()">Voir dépenses</button>
-  <p id="result"></p>
+  <header>
+    <h1>NeoLife</h1>
+    <p>Application de gestion intelligente du quotidien</p>
+  </header>
 
+  <main class="container">
+    <!-- 🧾 Gestion des dépenses -->
+    <section id="depenses">
+      <h2>Gestion des dépenses</h2>
+      <p>Suivez vos achats et visualisez vos dépenses.</p>
+      <button class="btn btn-primary" onclick="getDepenses()">Voir les dépenses</button>
+      <p id="resultDepenses" class="mt-2 text-success fw-bold"></p>
+    </section>
+
+    <!-- 🛒 Liste de courses -->
+    <section id="courses">
+      <h2>Liste de courses intelligente</h2>
+      <p>Ajoutez vos produits et découvrez des recettes associées.</p>
+      <button class="btn btn-success" onclick="getRecettes()">Voir les recettes</button>
+      <ul id="recettesList" class="mt-2"></ul>
+    </section>
+
+    <!-- ❤️ Suivi de santé -->
+    <section id="sante">
+      <h2>Suivi de santé</h2>
+      <p>Enregistrez vos repas, votre activité et votre sommeil.</p>
+      <button class="btn btn-danger" onclick="showSante()">Afficher les statistiques</button>
+      <p id="santeStats" class="mt-2 text-danger"></p>
+    </section>
+
+    <!-- 📅 Agenda personnel -->
+    <section id="agenda">
+      <h2>Agenda personnel</h2>
+      <p>Centralisez vos rendez-vous et tâches quotidiennes.</p>
+      <button class="btn btn-warning" onclick="showAgenda()">Afficher l’agenda</button>
+      <ul id="agendaList" class="mt-2"></ul>
+    </section>
+
+    <!-- 📝 Carnet de notes -->
+    <section id="notes">
+      <h2>Carnet de notes rapide</h2>
+      <p>Écrivez vos idées et classez-les par tags.</p>
+      <textarea id="noteInput" class="form-control" placeholder="Écrivez ici..."></textarea>
+      <button class="btn btn-secondary" onclick="addNote()">Ajouter la note</button>
+      <ul id="notesList" class="mt-2"></ul>
+    </section>
+  </main>
+
+  <!-- 🔹 JavaScript -->
   <script>
     async function getDepenses() {
       const res = await fetch("http://localhost:5000/depenses");
       const data = await res.json();
-      document.getElementById("result").innerText = "Total: " + data.total + " Ar";
+      document.getElementById("resultDepenses").innerText = "Total des dépenses : " + data.total + " Ar";
+    }
+
+    function getRecettes() {
+      const recettes = ["Salade", "Poulet rôti", "Smoothie"];
+      const list = document.getElementById("recettesList");
+      list.innerHTML = "";
+      recettes.forEach(r => {
+        const item = document.createElement("li");
+        item.textContent = r;
+        list.appendChild(item);
+      });
+    }
+
+    function showSante() {
+      document.getElementById("santeStats").innerText = "Calories : 2200 | Sommeil : 7h | Activité : 45 min";
+    }
+
+    function showAgenda() {
+      const agenda = ["Réunion 10h", "Sport 17h", "Lecture 20h"];
+      const list = document.getElementById("agendaList");
+      list.innerHTML = "";
+      agenda.forEach(a => {
+        const item = document.createElement("li");
+        item.textContent = a;
+        list.appendChild(item);
+      });
+    }
+
+    function addNote() {
+      const note = document.getElementById("noteInput").value;
+      if (!note) return;
+      const list = document.getElementById("notesList");
+      const item = document.createElement("li");
+      item.textContent = note;
+      list.appendChild(item);
+      document.getElementById("noteInput").value = "";
     }
   </script>
 </body>
