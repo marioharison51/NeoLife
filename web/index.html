@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NeoLife</title>
+</head>
+<body>
+  <h1>Bienvenue sur NeoLife</h1>
+  <button onclick="getDepenses()">Voir dépenses</button>
+  <p id="result"></p>
+
+  <script>
+    async function getDepenses() {
+      const res = await fetch("http://localhost:5000/depenses");
+      const data = await res.json();
+      document.getElementById("result").innerText = "Total: " + data.total + " Ar";
+    }
+  </script>
+</body>
+</html>
