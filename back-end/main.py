@@ -18,5 +18,5 @@ def supprimer_depense(index):
     """Supprime une dépense à partir de son index dans la liste."""
     return jsonify({"message": f"Dépense {index} supprimée"})
     
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=5000)
