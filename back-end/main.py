@@ -13,7 +13,6 @@ def depenses():
     """Retourne le total des dépenses calculé via le module C."""
     total = lib.calcul_depenses()
     return jsonify({"total": total})
-    
 @app.route('/depenses/<int:index>', methods=['DELETE'])
 def supprimer_depense(index):
     """Supprime une dépense à partir de son index dans la liste."""
