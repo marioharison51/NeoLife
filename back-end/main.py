@@ -1,3 +1,4 @@
+
 """Backend Flask pour le calcul des dépenses de NeoLife."""
 
 import ctypes
