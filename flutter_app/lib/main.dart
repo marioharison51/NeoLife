@@ -1,51 +1,55 @@
-name: Build Flutter APK
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'flutter_app/**'
-  workflow_dispatch:
+void main() => runApp(const NeoLifeApp());
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+class NeoLifeApp extends StatelessWidget {
+  const NeoLifeApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'NeoLife',
+      theme: ThemeData(primarySwatch: Colors.indigo),
+      home: const HomePage(),
+    );
+  }
+}
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
+class _HomePageState extends State<HomePage> {
+  String total = "Chargement...";
 
-      - name: Generate missing Flutter scaffolding if needed
-        working-directory: flutter_app
-        run: |
-          if [ ! -f "pubspec.yaml" ]; then
-            echo "pubspec.yaml manquant, impossible de continuer sans lui."
-            exit 1
-          fi
-          if [ ! -d "android" ]; then
-            flutter create --platforms=android --project-name neolife --org com.mariohariso51 .
-          fi
+  @override
+  void initState() {
+    super.initState();
+    fetchTotal();
+  }
 
-      - name: Install dependencies
-        working-directory: flutter_app
-        run: flutter pub get
+  Future<void> fetchTotal() async {
+    final res = await http.get(Uri.parse("http://localhost:5000/depenses"));
+    final data = jsonDecode(res.body);
+    setState(() => total = "${data['total']} Ar");
+  }
 
-      - name: Build APK
-        working-directory: flutter_app
-        run: flutter build apk --release
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: neolife-apk
-          path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("NeoLife")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Total des dépenses :"),
+            Text(total, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+}
